@@ -3,12 +3,13 @@ package demo.userboard.repository;
 import demo.userboard.domain.User;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Repository
 public class JpaMemoryUserRepository implements UserRepository {
 
     private final EntityManager em;
