@@ -43,6 +43,12 @@ public class User {
 
     @Builder
     public User(String name, String nickname, String email, String password, Gender gender, Integer age) {
+
+        Assert.hasText(name, "이름을 입력해주세요.");
+        Assert.hasText(nickname, "닉네임을 입력해주세요.");
+        Assert.hasText(email, "이메일을 입력해주세요.");
+        Assert.hasText(password, "비밀번호를 입력해주세요.");
+
         this.name = name;
         this.nickname = nickname;
         this.email = email;
@@ -52,6 +58,10 @@ public class User {
     }
 
     public void updateUserInfo(String nickname, String password) {
+
+        Assert.hasText(nickname, "닉네임을 입력해주세요.");
+        Assert.hasText(password, "비밀번호를 입력해주세요.");
+
         this.nickname = nickname;
         this.password = password;
     }
