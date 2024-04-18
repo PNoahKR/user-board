@@ -23,11 +23,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void join(User user) {
+        validateDuplicateUser(user);
         userRepository.save(user);
     }
 
     @Override
     public Optional<User> findUser(Long userId) {
         return userRepository.findById(userId);
+    }
+
+    private void validateDuplicateUser(User user) {
+        userRepository.findByEmail(user.getEmail())
+                .ifPresent(a -> {throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");});
+        userRepository.findByNickname(user.getNickname())
+                .ifPresent(a -> {throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");});
     }
 }
