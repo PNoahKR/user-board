@@ -35,18 +35,4 @@ class UserServiceTest {
         User user1 = userService.findUser(user.getId()).get();
         Assertions.assertThat(user.getEmail()).isEqualTo(user1.getEmail());
     }
-
-    @Test
-    void findByEmail() {
-        User user = new User();
-        user.setName("hi");
-        user.setNickname("no");
-        user.setPassword("12");
-        user.setEmail("asd@asd.com");
-        userRepository.save(user);
-
-        User result = userRepository.findByEmail(user.getEmail()).get();
-        Assertions.assertThat(user).isEqualTo(result);
-    }
-
 }

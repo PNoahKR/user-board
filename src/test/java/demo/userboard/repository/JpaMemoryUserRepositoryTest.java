@@ -32,4 +32,18 @@ class JpaMemoryUserRepositoryTest {
         Assertions.assertThat(user).isEqualTo(user1);
     }
 
+    @Test
+    public void findByEmail() {
+        User user = new User();
+        user.setName("hi");
+        user.setNickname("no");
+        user.setPassword("12");
+        user.setEmail("asd@asd.com");
+        user.setAge(28);
+        user.setGender(Gender.M);
+        repository.save(user);
+
+        User result = repository.findByEmail(user.getEmail()).get();
+        Assertions.assertThat(user).isEqualTo(result);
+    }
 }

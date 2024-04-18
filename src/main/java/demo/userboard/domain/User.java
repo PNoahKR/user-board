@@ -1,10 +1,7 @@
 package demo.userboard.domain;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,14 +12,31 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id; //primary key
+
+    @Column(name = "name")
     private String name; //회원 이름
+
+    @Column(name = "nickname")
     private String nickname; //회원 닉네임(중복x)
+
+    @Column(name = "email")
     private String email; //회원 이메일(로그인 아이디 중복x)
+
+    @Column(name = "password")
     private String password; //회원 비밀번호
+
+    @Column(name = "gender")
     private Gender gender; //회원 성별(M,W)
+
+    @Column(name = "age")
     private Integer age; //회원 나이
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt; //생성일시
+
+    @Column(name = "modified_at")
     private LocalDateTime modifiedAt; //수정일시
 
     public User() {
