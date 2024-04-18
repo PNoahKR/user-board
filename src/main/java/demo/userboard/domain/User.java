@@ -28,6 +28,7 @@ public class User {
     private String password; //회원 비밀번호
 
     @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
     private Gender gender; //회원 성별(M,W)
 
     @Column(name = "age")
