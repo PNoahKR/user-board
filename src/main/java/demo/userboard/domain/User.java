@@ -3,6 +3,7 @@ package demo.userboard.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
@@ -12,19 +13,19 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", unique = true)
     private Long id; //primary key
 
-    @Column(name = "name")
+    @Column(name = "name", length = 30, nullable = false)
     private String name; //회원 이름
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", length = 5, unique = true, nullable = false)
     private String nickname; //회원 닉네임(중복x)
 
-    @Column(name = "email")
+    @Column(name = "email", length = 30, unique = true, nullable = false)
     private String email; //회원 이메일(로그인 아이디 중복x)
 
-    @Column(name = "password")
+    @Column(name = "password", length = 60, nullable = false)
     private String password; //회원 비밀번호
 
     @Column(name = "gender")
