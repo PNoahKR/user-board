@@ -2,13 +2,13 @@ package demo.userboard.domain;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +40,7 @@ public class User {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt; //수정일시
 
-    public User() {
-    }
-
+    @Builder
     public User(String name, String nickname, String email, String password, Gender gender, Integer age) {
         this.name = name;
         this.nickname = nickname;
@@ -50,5 +48,10 @@ public class User {
         this.password = password;
         this.gender = gender;
         this.age = age;
+    }
+
+    public void updateUserInfo(String nickname, String password) {
+        this.nickname = nickname;
+        this.password = password;
     }
 }

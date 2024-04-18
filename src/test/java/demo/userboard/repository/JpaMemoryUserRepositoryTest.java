@@ -19,12 +19,15 @@ class JpaMemoryUserRepositoryTest {
 
     @Test
     public void save() {
-        User user = new User();
-        user.setName("jiwoo");
-        user.setEmail("jiwoo@email.com");
-        user.setGender(Gender.M);
-        user.setNickname("noah");
-        user.setPassword("0070");
+        User user = User.builder()
+                .name("지우")
+                .age(28)
+                .email("wldn@hi.com")
+                .password("0818")
+                .nickname("Noah")
+                .gender(Gender.M)
+                .build();
+
 
         repository.save(user);
 
@@ -34,13 +37,16 @@ class JpaMemoryUserRepositoryTest {
 
     @Test
     public void findByEmail() {
-        User user = new User();
-        user.setName("hi");
-        user.setNickname("no");
-        user.setPassword("12");
-        user.setEmail("asd@asd.com");
-        user.setAge(28);
-        user.setGender(Gender.M);
+        User user = User
+                .builder()
+                .name("지우")
+                .age(28)
+                .email("wldn@hi.com")
+                .password("0818")
+                .nickname("Noah")
+                .gender(Gender.M)
+                .build();
+
         repository.save(user);
 
         User result = repository.findByEmail(user.getEmail()).get();
