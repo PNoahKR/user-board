@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public void join(User user) {
         userRepository.save(user);
     }

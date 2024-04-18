@@ -2,6 +2,7 @@ package demo.userboard.repository;
 
 import demo.userboard.domain.User;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -10,13 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class JpaMemoryUserRepository implements UserRepository {
 
     private final EntityManager em;
-
-    public JpaMemoryUserRepository(EntityManager em) {
-        this.em = em;
-    }
 
     @Override
     public User save(User user) {
