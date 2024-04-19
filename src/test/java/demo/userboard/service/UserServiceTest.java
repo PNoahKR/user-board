@@ -66,4 +66,32 @@ class UserServiceTest {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> userService.join(user2));
         Assertions.assertThat(e.getMessage()).isEqualTo("이미 존재하는 이메일 입니다.");
     }
+
+    @Test
+    void validateDuplicateUserTest2() {
+        User user1 = User
+                .builder()
+                .name("지우")
+                .age(28)
+                .email("wldn@hi.net")
+                .password("0818")
+                .nickname("Noah")
+                .gender(Gender.M)
+                .build();
+
+        User user2 = User
+                .builder()
+                .name("노아")
+                .age(28)
+                .email("wldn@hi.com")
+                .password("0818")
+                .nickname("Noah")
+                .gender(Gender.M)
+                .build();
+
+        userService.join(user1);
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> userService.join(user2));
+        Assertions.assertThat(e.getMessage()).isEqualTo("이미 존재하는 닉네임 입니다.");
+    }
 }

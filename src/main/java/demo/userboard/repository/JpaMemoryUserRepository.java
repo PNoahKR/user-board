@@ -30,23 +30,23 @@ public class JpaMemoryUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        List<User> result = em.createQuery("select m from User m where m.email = :email", User.class)
+        User result = em.createQuery("select u from User u where u.email = :email", User.class)
                 .setParameter("email", email)
-                .getResultList();
-        return result.stream().findAny();
+                .getSingleResult();
+        return Optional.of(result);
     }
 
     @Override
     public Optional<User> findByNickname(String nickname) {
-        List<User> result = em.createQuery("select m from User m where m.nickname = :nickname", User.class)
+        User result = em.createQuery("select u from User u where u.nickname = :nickname", User.class)
                 .setParameter("nickname", nickname)
-                .getResultList();
-        return result.stream().findAny();
+                .getSingleResult();
+        return Optional.of(result);
     }
 
     @Override
     public Optional<User> findByEmailOrNickname(String email, String nickname) {
-        List<User> result = em.createQuery("select m from User m where m.email = :email OR m.nickname = :nickname", User.class)
+        List<User> result = em.createQuery("select u from User u where u.email = :email OR u.nickname = :nickname", User.class)
                 .setParameter("email", email)
                 .setParameter("nickname", nickname)
                 .getResultList();
