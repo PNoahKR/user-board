@@ -12,4 +12,6 @@ public interface UserRepository {
     Optional<User> findByEmail(String email);
 
     Optional<User> findByNickname(String nickname);
+
+    Optional<User> findByEmailOrNickname(String email, String nickname);
 }

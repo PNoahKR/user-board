@@ -33,9 +33,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateDuplicateUser(User user) {
-        userRepository.findByEmail(user.getEmail())
-                .ifPresent(a -> {throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");});
-        userRepository.findByNickname(user.getNickname())
-                .ifPresent(a -> {throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");});
+        userRepository.findByEmailOrNickname(user.getEmail(), user.getNickname())
+                .ifPresent(a -> {
+                    if (a.getEmail().equals(user.getEmail())) {
+                        throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
+                    }
+                    if (a.getNickname().equals(user.getNickname())) {
+                        throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");
+                    }
+                });
     }
 }
