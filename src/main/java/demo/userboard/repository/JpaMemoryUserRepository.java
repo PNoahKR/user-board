@@ -3,11 +3,8 @@ package demo.userboard.repository;
 import demo.userboard.domain.User;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -33,7 +30,7 @@ public class JpaMemoryUserRepository implements UserRepository {
         User result = em.createQuery("select u from User u where u.email = :email", User.class)
                 .setParameter("email", email)
                 .getSingleResult();
-        return Optional.of(result);
+        return Optional.ofNullable(result);
     }
 
     @Override
@@ -41,15 +38,15 @@ public class JpaMemoryUserRepository implements UserRepository {
         User result = em.createQuery("select u from User u where u.nickname = :nickname", User.class)
                 .setParameter("nickname", nickname)
                 .getSingleResult();
-        return Optional.of(result);
+        return Optional.ofNullable(result);
     }
 
     @Override
     public Optional<User> findByEmailOrNickname(String email, String nickname) {
-        List<User> result = em.createQuery("select u from User u where u.email = :email OR u.nickname = :nickname", User.class)
+        User result = em.createQuery("select u from User u where u.email = :email OR u.nickname = :nickname", User.class)
                 .setParameter("email", email)
                 .setParameter("nickname", nickname)
-                .getResultList();
-        return result.stream().findAny();
+                .getSingleResult();
+        return Optional.ofNullable(result);
     }
 }
