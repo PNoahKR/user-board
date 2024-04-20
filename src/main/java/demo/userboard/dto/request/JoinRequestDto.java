@@ -8,6 +8,7 @@ import org.springframework.util.Assert;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class JoinRequestDto {
 
     private String name;

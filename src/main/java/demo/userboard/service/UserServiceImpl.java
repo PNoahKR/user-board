@@ -1,7 +1,10 @@
 package demo.userboard.service;
 
 import demo.userboard.domain.User;
+import demo.userboard.dto.request.JoinRequestDto;
+import demo.userboard.dto.response.JoinResponseDto;
 import demo.userboard.repository.UserRepository;
+import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -22,9 +25,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void join(User user) {
+    public JoinResponseDto join(JoinRequestDto requestDto) {
+        User user = requestDto.toEntity();
         validateDuplicateUser(user);
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return new JoinResponseDto("성공", savedUser.getId(), 200);
     }
 
     @Override
