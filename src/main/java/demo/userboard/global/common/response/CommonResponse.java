@@ -18,4 +18,14 @@ public class CommonResponse<T> {
         this.message = message;
         this.data = data;
     }
+
+
+    public CommonResponse(
+        Integer status,
+        String message
+    ) {
+        this.status = status;
+        this.message = message;
+        this.data = null;
+    }
 }
