@@ -2,17 +2,19 @@ package demo.userboard.domain;
 
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private Long id; //primary key
 
@@ -34,12 +36,6 @@ public class User {
 
     @Column(name = "age")
     private Integer age; //회원 나이
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt; //생성일시
-
-    @Column(name = "modified_at")
-    private LocalDateTime modifiedAt; //수정일시
 
     @Builder
     public User(String name, String nickname, String email, String password, Gender gender, Integer age) {
