@@ -9,13 +9,9 @@ public class CommonResponse<T> {
     private final String message;
     private final T data;
 
-    public CommonResponse(
-            Integer status,
-            String message,
-            T data
-    ) {
+    public CommonResponse(Integer status, String message) {
         this.status = status;
         this.message = message;
-        this.data = data;
+        this.data = null;
     }
 }
