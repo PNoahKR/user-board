@@ -10,10 +10,8 @@ import static org.springframework.http.HttpStatus.OK;
 public enum CustomErrorCode {
     // 공통 응답 코드
     SUCCESS(OK, "success"),
-    SERVER_ERROR(INTERNAL_SERVER_ERROR, "server error"),
+    SERVER_ERROR(INTERNAL_SERVER_ERROR, "server error");
     // 사용자 정의 코드
-    API_RESPONSE_ERROR(INTERNAL_SERVER_ERROR, "API 요청에 실패하였습니다");
-
 
     private final HttpStatus status;
     private final String message;
