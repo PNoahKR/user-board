@@ -18,4 +18,8 @@ public class ApiResponseUtil {
     public static <T> CommonResponse<T> failure(CustomErrorCode errorCode) {
         return new CommonResponse<>(errorCode.getStatus().value(), errorCode.getMessage());
     }
+
+    public static <T> CommonResponse<T> failure(Integer statusCode, String message) {
+        return new CommonResponse<>(statusCode, message);
+    }
 }

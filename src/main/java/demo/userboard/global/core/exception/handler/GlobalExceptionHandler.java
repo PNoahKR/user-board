@@ -5,9 +5,12 @@ import demo.userboard.global.common.response.CustomErrorCode;
 import demo.userboard.global.common.util.ApiResponseUtil;
 import demo.userboard.global.core.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import static demo.userboard.global.common.response.CustomErrorCode.SERVER_ERROR;
@@ -38,7 +41,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ApiResponseUtil.failure(errorCode));
     }
 
-    private ResponseEntity<CommonResponse<Object>> handleExceptionInternal(CustomException exception) {
-        return toErrorResponseEntity(exception.getErrorCode());
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception exception, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+        log.error("Exception", exception);
+        CommonResponse<Object> response = ApiResponseUtil.failure(statusCode.value(), exception.getMessage());
+        return ResponseEntity.status(statusCode).body(response);
     }
 }
