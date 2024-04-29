@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -43,10 +44,10 @@ public class JpaMemoryUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByEmailOrNickname(String email, String nickname) {
-        User result = em.createQuery("select u from User u where u.email = :email OR u.nickname = :nickname", User.class)
+        List<User> result = em.createQuery("select u from User u where u.email = :email OR u.nickname = :nickname", User.class)
                 .setParameter("email", email)
                 .setParameter("nickname", nickname)
-                .getSingleResult();
-        return Optional.ofNullable(result);
+                .getResultList();
+        return result.stream().findAny();
     }
 }
