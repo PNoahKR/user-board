@@ -13,5 +13,5 @@ public interface UserService {
 
     LoginResponseDto login(LoginRequestDto requestDto);
 
-    Optional<User> findUser(Long userId);
+    Optional<User> findUser(String userEmail);
 }

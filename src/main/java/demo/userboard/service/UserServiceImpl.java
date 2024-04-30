@@ -5,6 +5,8 @@ import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
 import demo.userboard.dto.response.JoinResponseDto;
 import demo.userboard.dto.response.LoginResponseDto;
+import demo.userboard.global.common.response.CustomErrorCode;
+import demo.userboard.global.core.exception.CustomException;
 import demo.userboard.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,19 +36,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResponseDto login(LoginRequestDto requestDto) {
-        Optional<User> user = userRepository.findByEmail(requestDto.getEmail());
-        if (user.isPresent()) {
-            User user1 = user.get();
-            if (user1.getPassword().equals(requestDto.getPassword())) {
-                return LoginResponseDto.from(user1);
-            }
-        }
-        return null;
+        return findUser(requestDto.getEmail())
+                .filter(user -> user.getPassword().equals(requestDto.getPassword()))
+                .map(LoginResponseDto::from)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.UNAUTHORIZED));
     }
 
     @Override
-    public Optional<User> findUser(Long userId) {
-        return userRepository.findById(userId);
+    public Optional<User> findUser(String userEmail) {
+        return userRepository.findByEmail(userEmail);
     }
 
     private void validateDuplicateUser(User user) {
