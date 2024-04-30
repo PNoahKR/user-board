@@ -2,11 +2,10 @@ package demo.userboard.service;
 
 import demo.userboard.domain.User;
 import demo.userboard.dto.request.JoinRequestDto;
+import demo.userboard.dto.request.LoginRequestDto;
 import demo.userboard.dto.response.JoinResponseDto;
+import demo.userboard.dto.response.LoginResponseDto;
 import demo.userboard.repository.UserRepository;
-import org.hibernate.mapping.Join;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +30,18 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
 
         return new JoinResponseDto("성공", savedUser.getId(), 200);
+    }
+
+    @Override
+    public LoginResponseDto login(LoginRequestDto requestDto) {
+        Optional<User> user = userRepository.findByEmail(requestDto.getEmail());
+        if (user.isPresent()) {
+            User user1 = user.get();
+            if (user1.getPassword().equals(requestDto.getPassword())) {
+                return LoginResponseDto.from(user1);
+            }
+        }
+        return null;
     }
 
     @Override
