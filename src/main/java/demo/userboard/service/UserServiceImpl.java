@@ -11,8 +11,6 @@ import demo.userboard.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Transactional(readOnly = true)
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,16 +34,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResponseDto login(LoginRequestDto requestDto) {
-        return findUser(requestDto.getEmail())
+        return userRepository.findByEmail(requestDto.getEmail())
                 .filter(user -> user.getPassword().equals(requestDto.getPassword()))
                 .map(LoginResponseDto::from)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.UNAUTHORIZED));
     }
 
-    @Override
-    public Optional<User> findUser(String userEmail) {
-        return userRepository.findByEmail(userEmail);
-    }
 
     private void validateDuplicateUser(User user) {
         userRepository.findByEmailOrNickname(user.getEmail(), user.getNickname())
