@@ -13,9 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginResponseDto {
 
-    private String message;
-    private int statusCode;
-
     private String name;
     private String nickname;
     private String email;
@@ -23,6 +20,6 @@ public class LoginResponseDto {
     private Integer age;
 
     public static LoginResponseDto from(User user) {
-        return new LoginResponseDto("로그인 성공", 200, user.getName(), user.getNickname(), user.getEmail(), user.getGender(), user.getAge());
+        return new LoginResponseDto(user.getName(), user.getNickname(), user.getEmail(), user.getGender(), user.getAge());
     }
 }
