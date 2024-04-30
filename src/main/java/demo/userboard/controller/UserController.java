@@ -8,7 +8,6 @@ import demo.userboard.global.common.response.CommonResponse;
 import demo.userboard.global.common.util.ApiResponseUtil;
 import demo.userboard.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,9 +19,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/user")
-    public ResponseEntity<JoinResponseDto> joinUser(@RequestBody JoinRequestDto joinRequestDto) {
+    public CommonResponse<JoinResponseDto> joinUser(@RequestBody JoinRequestDto joinRequestDto) {
 
-        return ResponseEntity.ok(userService.join(joinRequestDto));
+        return ApiResponseUtil.success(userService.join(joinRequestDto));
     }
 
     @PostMapping("/login")
