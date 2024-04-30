@@ -1,13 +1,13 @@
 package demo.userboard.service;
 
-import demo.userboard.domain.User;
 import demo.userboard.dto.request.JoinRequestDto;
+import demo.userboard.dto.request.LoginRequestDto;
 import demo.userboard.dto.response.JoinResponseDto;
-
-import java.util.Optional;
+import demo.userboard.dto.response.LoginResponseDto;
 
 public interface UserService {
     JoinResponseDto join(JoinRequestDto requestDto);
 
-    Optional<User> findUser(Long userId);
+    LoginResponseDto login(LoginRequestDto requestDto);
+
 }

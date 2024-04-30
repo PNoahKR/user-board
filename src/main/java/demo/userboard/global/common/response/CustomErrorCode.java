@@ -10,8 +10,9 @@ import static org.springframework.http.HttpStatus.OK;
 public enum CustomErrorCode {
     // 공통 응답 코드
     SUCCESS(OK, "success"),
-    SERVER_ERROR(INTERNAL_SERVER_ERROR, "server error");
+    SERVER_ERROR(INTERNAL_SERVER_ERROR, "server error"),
     // 사용자 정의 코드
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "login failed");
 
     private final HttpStatus status;
     private final String message;
