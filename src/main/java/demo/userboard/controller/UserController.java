@@ -4,7 +4,6 @@ import demo.userboard.SessionConst;
 import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
 import demo.userboard.dto.response.JoinResponseDto;
-import demo.userboard.dto.response.LoginResponseDto;
 import demo.userboard.global.common.response.CommonResponse;
 import demo.userboard.global.common.util.ApiResponseUtil;
 import demo.userboard.service.UserService;
@@ -27,12 +26,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public CommonResponse<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpSession session) {
-        LoginResponseDto responseDto = userService.login(loginRequestDto);
+    public CommonResponse<Long> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpSession session) {
+        Long userId = userService.login(loginRequestDto);
 
-        session.setAttribute(SessionConst.LOGIN_USER, responseDto);
+        session.setAttribute(SessionConst.LOGIN_USER, userId);
         session.setMaxInactiveInterval(600);
 
-        return ApiResponseUtil.success(responseDto);
+        return ApiResponseUtil.success(userId);
     }
 }

@@ -4,7 +4,6 @@ import demo.userboard.domain.User;
 import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
 import demo.userboard.dto.response.JoinResponseDto;
-import demo.userboard.dto.response.LoginResponseDto;
 import demo.userboard.global.common.response.CustomErrorCode;
 import demo.userboard.global.core.exception.CustomException;
 import demo.userboard.repository.UserRepository;
@@ -33,10 +32,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginResponseDto login(LoginRequestDto requestDto) {
+    public Long login(LoginRequestDto requestDto) {
         return userRepository.findByEmail(requestDto.getEmail())
                 .filter(user -> user.getPassword().equals(requestDto.getPassword()))
-                .map(LoginResponseDto::from)
+                .map(User::getId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.BAD_REQUEST));
     }
 
