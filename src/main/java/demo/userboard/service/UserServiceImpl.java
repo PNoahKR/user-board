@@ -4,6 +4,7 @@ import demo.userboard.domain.User;
 import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
 import demo.userboard.dto.response.JoinResponseDto;
+import demo.userboard.dto.response.UserResponseDto;
 import demo.userboard.global.common.response.CustomErrorCode;
 import demo.userboard.global.core.exception.CustomException;
 import demo.userboard.repository.UserRepository;
@@ -37,6 +38,13 @@ public class UserServiceImpl implements UserService {
                 .filter(user -> user.getPassword().equals(requestDto.getPassword()))
                 .map(User::getId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.LOGIN_FAIL));
+    }
+
+    @Override
+    public UserResponseDto findUser(Long id) {
+        return userRepository.findById(id)
+                .map(UserResponseDto::from)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
     }
 
 
