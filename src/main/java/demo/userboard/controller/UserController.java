@@ -31,7 +31,8 @@ public class UserController {
         LoginResponseDto responseDto = userService.login(loginRequestDto);
 
         session.setAttribute(SessionConst.LOGIN_USER, responseDto);
-        
+        session.setMaxInactiveInterval(600);
+
         return ApiResponseUtil.success(responseDto);
     }
 }
