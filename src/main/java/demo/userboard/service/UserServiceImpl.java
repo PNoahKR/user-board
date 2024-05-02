@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(requestDto.getEmail())
                 .filter(user -> user.getPassword().equals(requestDto.getPassword()))
                 .map(LoginResponseDto::from)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.UNAUTHORIZED));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.BAD_REQUEST));
     }
 
 
