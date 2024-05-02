@@ -43,4 +43,10 @@ public class UserController {
 
         return ApiResponseUtil.success(userService.findUser(loginUser));
     }
+
+    @PostMapping("/logout")
+    public CommonResponse<?> logout(HttpSession session) {
+        session.invalidate();
+        return ApiResponseUtil.success();
+    }
 }
