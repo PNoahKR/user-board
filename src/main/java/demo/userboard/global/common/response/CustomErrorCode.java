@@ -13,6 +13,7 @@ public enum CustomErrorCode {
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "server error"),
     // 사용자 정의 코드
     LOGIN_FAIL(HttpStatus.BAD_REQUEST, "로그인 실패"),
+    NOT_FOUND_LOGIN_INFO(HttpStatus.NOT_FOUND, "계정 정보를 찾을 수 없습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증 실패");
 
     private final HttpStatus status;
