@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto findUser(Long id) {
         return userRepository.findById(id)
                 .map(UserResponseDto::from)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NO_ACCOUNT_INFO));
     }
 
 
