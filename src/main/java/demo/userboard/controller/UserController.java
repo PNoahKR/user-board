@@ -1,14 +1,15 @@
 package demo.userboard.controller;
 
 import demo.userboard.SessionConst;
+import demo.userboard.dto.request.InfoUpdateRequestDto;
 import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
+import demo.userboard.dto.response.InfoUpdateResponseDto;
 import demo.userboard.dto.response.JoinResponseDto;
 import demo.userboard.dto.response.UserResponseDto;
 import demo.userboard.global.annotation.SessionAuth;
 import demo.userboard.global.common.auth.SessionLoginInfo;
 import demo.userboard.global.common.response.CommonResponse;
-import demo.userboard.global.common.response.CustomErrorCode;
 import demo.userboard.global.common.util.ApiResponseUtil;
 import demo.userboard.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -41,6 +42,15 @@ public class UserController {
     public CommonResponse<UserResponseDto> userInfo(@SessionAuth SessionLoginInfo sessionLoginInfo) {
 
         return ApiResponseUtil.success(userService.findUser(sessionLoginInfo.getId()));
+    }
+
+    @PutMapping("/user/info")
+    public CommonResponse<InfoUpdateResponseDto> infoUpdate(@RequestBody InfoUpdateRequestDto requestDto,
+                                                            @SessionAuth SessionLoginInfo sessionLoginInfo) {
+
+        InfoUpdateResponseDto infoUpdateResponseDto = userService.userInfoUpdate(sessionLoginInfo.getId(), requestDto);
+
+        return ApiResponseUtil.success(infoUpdateResponseDto);
     }
 
     @PostMapping("/logout")

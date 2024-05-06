@@ -53,12 +53,11 @@ public class User extends BaseEntity {
         this.age = age;
     }
 
-    public void updateUserInfo(String nickname, String password) {
-
-        Assert.hasText(nickname, "닉네임을 입력해주세요.");
-        Assert.hasText(password, "비밀번호를 입력해주세요.");
-
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void updatePassword(String password) {
         this.password = password;
     }
 }

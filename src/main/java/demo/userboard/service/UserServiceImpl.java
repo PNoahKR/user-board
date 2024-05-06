@@ -1,8 +1,10 @@
 package demo.userboard.service;
 
 import demo.userboard.domain.User;
+import demo.userboard.dto.request.InfoUpdateRequestDto;
 import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
+import demo.userboard.dto.response.InfoUpdateResponseDto;
 import demo.userboard.dto.response.JoinResponseDto;
 import demo.userboard.dto.response.UserResponseDto;
 import demo.userboard.global.common.response.CustomErrorCode;
@@ -45,6 +47,31 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .map(UserResponseDto::from)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_LOGIN_INFO));
+    }
+
+    @Override
+    @Transactional
+    public InfoUpdateResponseDto userInfoUpdate(Long id, InfoUpdateRequestDto requestDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_LOGIN_INFO));
+
+        if (requestDto.getNickname() != null) {
+            userRepository.findByNickname(requestDto.getNickname())
+                    .ifPresent(u -> {
+                        if (u.getNickname().equals(user.getNickname())) {
+                            throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");
+                        }
+                    });
+            user.updateNickname(requestDto.getNickname());
+        }
+
+        if (requestDto.getPassword() != null) {
+            user.updatePassword(requestDto.getPassword());
+        }
+
+        User updateInfo = userRepository.save(user);
+
+        return new InfoUpdateResponseDto("변경되었습니다.", updateInfo.getNickname());
     }
 
 
