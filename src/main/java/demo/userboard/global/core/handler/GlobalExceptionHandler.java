@@ -1,4 +1,4 @@
-package demo.userboard.global.core.exception.handler;
+package demo.userboard.global.core.handler;
 
 import demo.userboard.global.common.response.CommonResponse;
 import demo.userboard.global.common.response.CustomErrorCode;
