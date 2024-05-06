@@ -36,10 +36,10 @@ public class JpaMemoryUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByNickname(String nickname) {
-        User result = em.createQuery("select u from User u where u.nickname = :nickname", User.class)
+        List<User> result = em.createQuery("select u from User u where u.nickname = :nickname", User.class)
                 .setParameter("nickname", nickname)
-                .getSingleResult();
-        return Optional.ofNullable(result);
+                .getResultList();
+        return result.stream().findAny();
     }
 
     @Override
