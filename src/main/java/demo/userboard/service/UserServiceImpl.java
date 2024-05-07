@@ -4,7 +4,6 @@ import demo.userboard.domain.User;
 import demo.userboard.dto.request.InfoUpdateRequestDto;
 import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
-import demo.userboard.dto.response.InfoUpdateResponseDto;
 import demo.userboard.dto.response.JoinResponseDto;
 import demo.userboard.dto.response.UserResponseDto;
 import demo.userboard.global.common.response.CustomErrorCode;
