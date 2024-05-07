@@ -4,7 +4,6 @@ import demo.userboard.SessionConst;
 import demo.userboard.dto.request.InfoUpdateRequestDto;
 import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
-import demo.userboard.dto.response.InfoUpdateResponseDto;
 import demo.userboard.dto.response.JoinResponseDto;
 import demo.userboard.dto.response.UserResponseDto;
 import demo.userboard.global.annotation.SessionAuth;
@@ -45,12 +44,12 @@ public class UserController {
     }
 
     @PutMapping("/user/info")
-    public CommonResponse<InfoUpdateResponseDto> infoUpdate(@RequestBody InfoUpdateRequestDto requestDto,
-                                                            @SessionAuth SessionLoginInfo sessionLoginInfo) {
+    public CommonResponse<Long> infoUpdate(@RequestBody InfoUpdateRequestDto requestDto,
+                                           @SessionAuth SessionLoginInfo sessionLoginInfo) {
 
-        InfoUpdateResponseDto infoUpdateResponseDto = userService.userInfoUpdate(sessionLoginInfo.getId(), requestDto);
+        Long userId = userService.userInfoUpdate(sessionLoginInfo.getId(), requestDto);
 
-        return ApiResponseUtil.success(infoUpdateResponseDto);
+        return ApiResponseUtil.success(userId);
     }
 
     @PostMapping("/logout")

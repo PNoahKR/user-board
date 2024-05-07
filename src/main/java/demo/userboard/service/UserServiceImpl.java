@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public InfoUpdateResponseDto userInfoUpdate(Long id, InfoUpdateRequestDto requestDto) {
+    public Long userInfoUpdate(Long id, InfoUpdateRequestDto requestDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_LOGIN_INFO));
 
@@ -67,9 +67,7 @@ public class UserServiceImpl implements UserService {
             user.updatePassword(requestDto.getPassword());
         }
 
-        User updateInfo = userRepository.save(user);
-
-        return new InfoUpdateResponseDto("변경되었습니다.", updateInfo.getNickname());
+        return id;
     }
 
 
