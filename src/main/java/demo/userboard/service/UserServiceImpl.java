@@ -58,9 +58,7 @@ public class UserServiceImpl implements UserService {
         if (requestDto.getNickname() != null) {
             userRepository.findByNickname(requestDto.getNickname())
                     .ifPresent(u -> {
-                        if (u.getNickname().equals(user.getNickname())) {
-                            throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");
-                        }
+                        throw new CustomException(CustomErrorCode.DUPLICATE_VALUE);
                     });
             user.updateNickname(requestDto.getNickname());
         }
