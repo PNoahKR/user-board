@@ -55,15 +55,44 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_LOGIN_INFO));
 
         if (requestDto.getNickname() != null) {
+            String newNickname = requestDto.getNickname();
+
+            if (newNickname.isEmpty()) {
+                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
+            }
+
+            if (newNickname.length() > 6) {
+                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
+            }
+
+            if (!newNickname.equals(newNickname.trim())) {
+                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
+            }
+
             userRepository.findByNickname(requestDto.getNickname())
                     .ifPresent(u -> {
                         throw new CustomException(CustomErrorCode.DUPLICATE_VALUE);
                     });
-            user.updateNickname(requestDto.getNickname());
+
+            user.updateNickname(newNickname);
         }
 
         if (requestDto.getPassword() != null) {
-            user.updatePassword(requestDto.getPassword());
+            String newPassword = requestDto.getPassword();
+
+            if (newPassword.isEmpty()) {
+                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
+            }
+
+            if (newPassword.length() < 4 || newPassword.length() > 20) {
+                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
+            }
+
+            if (!newPassword.equals(newPassword.trim())) {
+                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
+            }
+
+            user.updatePassword(newPassword);
         }
 
         return id;
