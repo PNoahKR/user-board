@@ -84,10 +84,10 @@ public class UserServiceImpl implements UserService {
         userRepository.findByEmailOrNickname(user.getEmail(), user.getNickname())
                 .ifPresent(a -> {
                     if (a.getEmail().equals(user.getEmail())) {
-                        throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
+                        throw new CustomException(CustomErrorCode.DUPLICATE_VALUE);
                     }
                     if (a.getNickname().equals(user.getNickname())) {
-                        throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");
+                        throw new CustomException(CustomErrorCode.DUPLICATE_VALUE);
                     }
                 });
     }
