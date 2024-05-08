@@ -11,6 +11,7 @@ import demo.userboard.global.core.exception.CustomException;
 import demo.userboard.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Transactional(readOnly = true)
 @Service
@@ -54,44 +55,24 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_LOGIN_INFO));
 
-        if (requestDto.getNickname() != null) {
-            String newNickname = requestDto.getNickname();
+        String newNickname = requestDto.getNickname();
+        String newPassword = requestDto.getPassword();
 
-            if (newNickname.isEmpty()) {
-                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
-            }
+        if (!StringUtils.hasText(newNickname) && !StringUtils.hasText(newPassword)) {
+            throw new CustomException(CustomErrorCode.INVALID_FORMAT);
+        }
 
-            if (newNickname.length() > 6) {
-                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
-            }
-
-            if (!newNickname.equals(newNickname.trim())) {
-                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
-            }
-
-            userRepository.findByNickname(requestDto.getNickname())
+        if (StringUtils.hasText(newNickname)) {
+            validateUpdateField(newNickname, 1, 6);
+            userRepository.findByNickname(newNickname)
                     .ifPresent(u -> {
                         throw new CustomException(CustomErrorCode.DUPLICATE_VALUE);
                     });
-
             user.updateNickname(newNickname);
         }
 
-        if (requestDto.getPassword() != null) {
-            String newPassword = requestDto.getPassword();
-
-            if (newPassword.isEmpty()) {
-                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
-            }
-
-            if (newPassword.length() < 4 || newPassword.length() > 20) {
-                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
-            }
-
-            if (!newPassword.equals(newPassword.trim())) {
-                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
-            }
-
+        if (StringUtils.hasText(newPassword)) {
+            validateUpdateField(newPassword, 4, 20);
             user.updatePassword(newPassword);
         }
 
@@ -109,5 +90,14 @@ public class UserServiceImpl implements UserService {
                         throw new IllegalArgumentException("이미 존재하는 닉네임 입니다.");
                     }
                 });
+    }
+
+    private void validateUpdateField(String field, int minLength, int maxLength) {
+        if (field.isEmpty()
+                || field.length() < minLength
+                || field.length() > maxLength
+                || !field.equals(field.trim())) {
+            throw new CustomException(CustomErrorCode.INVALID_FORMAT);
+        }
     }
 }
