@@ -1,5 +1,6 @@
 package demo.userboard.service;
 
+import demo.userboard.dto.request.InfoUpdateRequestDto;
 import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
 import demo.userboard.dto.response.JoinResponseDto;
@@ -11,4 +12,6 @@ public interface UserService {
     Long login(LoginRequestDto requestDto);
 
     UserResponseDto findUser(Long id);
+
+    Long userInfoUpdate(Long id, InfoUpdateRequestDto requestDto);
 }

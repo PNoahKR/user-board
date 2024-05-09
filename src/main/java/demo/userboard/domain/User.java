@@ -27,7 +27,7 @@ public class User extends BaseEntity {
     @Column(name = "email", length = 30, unique = true, nullable = false)
     private String email; //회원 이메일(로그인 아이디 중복x)
 
-    @Column(name = "password", length = 60, nullable = false)
+    @Column(name = "password", length = 20, nullable = false)
     private String password; //회원 비밀번호
 
     @Column(name = "gender")
@@ -53,12 +53,11 @@ public class User extends BaseEntity {
         this.age = age;
     }
 
-    public void updateUserInfo(String nickname, String password) {
-
-        Assert.hasText(nickname, "닉네임을 입력해주세요.");
-        Assert.hasText(password, "비밀번호를 입력해주세요.");
-
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void updatePassword(String password) {
         this.password = password;
     }
 }

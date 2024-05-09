@@ -1,12 +1,14 @@
 package demo.userboard.controller;
 
 import demo.userboard.SessionConst;
+import demo.userboard.dto.request.InfoUpdateRequestDto;
 import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
 import demo.userboard.dto.response.JoinResponseDto;
 import demo.userboard.dto.response.UserResponseDto;
+import demo.userboard.global.annotation.SessionAuth;
+import demo.userboard.global.common.auth.SessionLoginInfo;
 import demo.userboard.global.common.response.CommonResponse;
-import demo.userboard.global.common.response.CustomErrorCode;
 import demo.userboard.global.common.util.ApiResponseUtil;
 import demo.userboard.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -36,12 +38,18 @@ public class UserController {
     }
 
     @GetMapping("/user/info")
-    public CommonResponse<UserResponseDto> userInfo(@SessionAttribute(value = SessionConst.LOGIN_USER, required = false) Long loginUser) {
-        if (loginUser == null) {
-            ApiResponseUtil.failure(CustomErrorCode.UNAUTHORIZED);
-        }
+    public CommonResponse<UserResponseDto> userInfo(@SessionAuth SessionLoginInfo sessionLoginInfo) {
 
-        return ApiResponseUtil.success(userService.findUser(loginUser));
+        return ApiResponseUtil.success(userService.findUser(sessionLoginInfo.getId()));
+    }
+
+    @PutMapping("/user/info")
+    public CommonResponse<Long> infoUpdate(@RequestBody InfoUpdateRequestDto requestDto,
+                                           @SessionAuth SessionLoginInfo sessionLoginInfo) {
+
+        Long userId = userService.userInfoUpdate(sessionLoginInfo.getId(), requestDto);
+
+        return ApiResponseUtil.success(userId);
     }
 
     @PostMapping("/logout")
