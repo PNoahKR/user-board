@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "title", length = 50, nullable = false)
