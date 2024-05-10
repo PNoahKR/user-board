@@ -14,6 +14,7 @@ public enum CustomErrorCode {
     // 사용자 정의 코드
     LOGIN_FAIL(HttpStatus.BAD_REQUEST, "로그인 실패"),
     NOT_FOUND_LOGIN_INFO(HttpStatus.NOT_FOUND, "계정 정보를 찾을 수 없습니다."),
+    NOT_FOUND_BOARD_INFO(HttpStatus.NOT_FOUND, "게시물 정보를 찾을 수 없습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증 실패"),
     DUPLICATE_VALUE(HttpStatus.CONFLICT, "중복 오류"),
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "유효하지 않은 입력입니다.");

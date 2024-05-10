@@ -3,6 +3,7 @@ package demo.userboard.service;
 import demo.userboard.domain.Board;
 import demo.userboard.domain.User;
 import demo.userboard.dto.request.PostRequestDto;
+import demo.userboard.dto.response.BoardDetailViewResponseDto;
 import demo.userboard.global.common.response.CustomErrorCode;
 import demo.userboard.global.core.exception.CustomException;
 import demo.userboard.repository.BoardRepository;
@@ -27,5 +28,12 @@ public class BoardServiceImpl implements BoardService {
         Board board = requestDto.toEntity(user);
         Board saveBoard = boardRepository.save(board);
         return saveBoard.getId();
+    }
+
+    @Override
+    public BoardDetailViewResponseDto findBoard(Long boardId) {
+        return boardRepository.findBoardById(boardId)
+                .map(BoardDetailViewResponseDto::from)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_BOARD_INFO));
     }
 }
