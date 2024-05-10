@@ -16,8 +16,8 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/board/{board_id}")
-    public CommonResponse<BoardDetailViewResponseDto> detailView(@PathVariable("board_id") Long boardId) {
+    @GetMapping("/board/{boardId}")
+    public CommonResponse<BoardDetailViewResponseDto> detailView(@PathVariable("boardId") Long boardId) {
         return ApiResponseUtil.success(boardService.findBoard(boardId));
     }
 
