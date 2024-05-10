@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,9 +37,6 @@ public class User extends BaseEntity {
 
     @Column(name = "age")
     private Integer age; //회원 나이
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Board> board;
 
     @Builder
     public User(String name, String nickname, String email, String password, Gender gender, Integer age) {
