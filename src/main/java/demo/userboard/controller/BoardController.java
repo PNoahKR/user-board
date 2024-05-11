@@ -1,5 +1,6 @@
 package demo.userboard.controller;
 
+import demo.userboard.dto.request.BoardUpdateRequestDto;
 import demo.userboard.dto.request.PostRequestDto;
 import demo.userboard.dto.response.BoardDetailViewResponseDto;
 import demo.userboard.global.annotation.SessionAuth;
@@ -26,5 +27,13 @@ public class BoardController {
                                      @SessionAuth SessionLoginInfo sessionLoginInfo) {
 
         return ApiResponseUtil.success(boardService.post(sessionLoginInfo.getId(), postRequestDto));
+    }
+
+    @PutMapping("/board/{boardId}")
+    public CommonResponse<Long> updateBoard(@PathVariable("boardId") Long boardId,
+                                            @RequestBody BoardUpdateRequestDto updateRequestDto,
+                                            @SessionAuth SessionLoginInfo sessionLoginInfo) {
+
+        return ApiResponseUtil.success(boardService.boardUpdate(boardId, sessionLoginInfo.getId(), updateRequestDto));
     }
 }
