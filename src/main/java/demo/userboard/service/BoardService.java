@@ -10,5 +10,5 @@ public interface BoardService {
 
     BoardDetailViewResponseDto findBoard(Long boardId);
 
-    Long boardUpdate(Long boardId, Long userId, BoardUpdateRequestDto updateRequestDto);
+    Long boardUpdate(BoardUpdateRequestDto updateRequestDto);
 }

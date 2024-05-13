@@ -41,13 +41,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public Long boardUpdate(Long boardId, Long userId, BoardUpdateRequestDto updateRequestDto) {
-        Board board = boardRepository.findBoardById(boardId)
+    public Long boardUpdate(BoardUpdateRequestDto updateRequestDto) {
+        Board board = boardRepository.findBoardById(updateRequestDto.getBoardId())
+                .filter(b -> b.getUser().getId().equals(updateRequestDto.getUserId()))
                 .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_BOARD_INFO));
-
-        if (!board.getUser().getId().equals(userId)) {
-            throw new CustomException(CustomErrorCode.UNAUTHORIZED);
-        }
 
         String newTitle = updateRequestDto.getTitle();
         String newContent = updateRequestDto.getContent();
@@ -66,6 +63,6 @@ public class BoardServiceImpl implements BoardService {
         if (StringUtils.hasText(newContent)) {
             board.updateContent(newContent);
         }
-        return boardId;
+        return updateRequestDto.getBoardId();
     }
 }

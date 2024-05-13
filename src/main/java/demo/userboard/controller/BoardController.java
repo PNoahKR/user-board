@@ -33,7 +33,8 @@ public class BoardController {
     public CommonResponse<Long> updateBoard(@PathVariable("boardId") Long boardId,
                                             @RequestBody BoardUpdateRequestDto updateRequestDto,
                                             @SessionAuth SessionLoginInfo sessionLoginInfo) {
-
-        return ApiResponseUtil.success(boardService.boardUpdate(boardId, sessionLoginInfo.getId(), updateRequestDto));
+        updateRequestDto.setBoardId(boardId);
+        updateRequestDto.setUserId(sessionLoginInfo.getId());
+        return ApiResponseUtil.success(boardService.boardUpdate(updateRequestDto));
     }
 }
