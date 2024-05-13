@@ -53,10 +53,13 @@ public class BoardServiceImpl implements BoardService {
         String newContent = updateRequestDto.getContent();
 
         if (!StringUtils.hasText(newTitle) && !StringUtils.hasText(newContent)) {
-            throw new CustomException(CustomErrorCode.NOT_FOUND_BOARD_INFO);
+            throw new CustomException(CustomErrorCode.INVALID_FORMAT);
         }
 
         if (StringUtils.hasText(newTitle)) {
+            if (newTitle.length() > 50) {
+                throw new CustomException(CustomErrorCode.INVALID_FORMAT);
+            }
             board.updateTitle(newTitle);
         }
 
