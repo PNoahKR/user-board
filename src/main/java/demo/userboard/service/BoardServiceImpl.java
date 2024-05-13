@@ -43,9 +43,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long boardUpdate(BoardUpdateRequestDto updateRequestDto) {
-        Board board = boardRepository.findBoardById(updateRequestDto.getBoardId())
-                .filter(b -> b.getUser().getId().equals(updateRequestDto.getUserId()))
-                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_BOARD_INFO));
+        Board board = validateUserAndAuth(updateRequestDto.getBoardId(), updateRequestDto.getUserId());
 
         String newTitle = updateRequestDto.getTitle();
         String newContent = updateRequestDto.getContent();
@@ -70,9 +68,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long boardDelete(BoardDeleteRequestDto deleteRequestDto) {
-        Board board = boardRepository.findBoardById(deleteRequestDto.getBoardId())
-                .filter(b -> b.getUser().getId().equals(deleteRequestDto.getUserId()))
-                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_BOARD_INFO));
+        Board board = validateUserAndAuth(deleteRequestDto.getBoardId(), deleteRequestDto.getUserId());
 
         userRepository.findById(deleteRequestDto.getUserId())
                 .filter(u -> u.getPassword().equals(deleteRequestDto.getPassword()))
@@ -81,5 +77,11 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.delete(board.getId());
 
         return deleteRequestDto.getBoardId();
+    }
+
+    private Board validateUserAndAuth(Long boardId, Long userId) {
+        return boardRepository.findBoardById(boardId)
+                .filter(b -> b.getUser().getId().equals(userId))
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_BOARD_INFO));
     }
 }
