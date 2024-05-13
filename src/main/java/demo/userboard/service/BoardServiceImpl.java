@@ -2,6 +2,7 @@ package demo.userboard.service;
 
 import demo.userboard.domain.Board;
 import demo.userboard.domain.User;
+import demo.userboard.dto.request.BoardDeleteRequestDto;
 import demo.userboard.dto.request.BoardUpdateRequestDto;
 import demo.userboard.dto.request.PostRequestDto;
 import demo.userboard.dto.response.BoardDetailViewResponseDto;
@@ -64,5 +65,21 @@ public class BoardServiceImpl implements BoardService {
             board.updateContent(newContent);
         }
         return updateRequestDto.getBoardId();
+    }
+
+    @Override
+    @Transactional
+    public Long boardDelete(BoardDeleteRequestDto deleteRequestDto) {
+        Board board = boardRepository.findBoardById(deleteRequestDto.getBoardId())
+                .filter(b -> b.getUser().getId().equals(deleteRequestDto.getUserId()))
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_BOARD_INFO));
+
+        userRepository.findById(deleteRequestDto.getUserId())
+                .filter(u -> u.getPassword().equals(deleteRequestDto.getPassword()))
+                .orElseThrow(() -> new CustomException(CustomErrorCode.UNAUTHORIZED));
+
+        boardRepository.delete(board.getId());
+
+        return deleteRequestDto.getBoardId();
     }
 }

@@ -4,6 +4,7 @@ import demo.userboard.domain.Board;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -23,5 +24,12 @@ public class JpaMemoryBoardRepository implements BoardRepository {
     public Optional<Board> findBoardById(Long boardId) {
         Board board = em.find(Board.class, boardId);
         return Optional.ofNullable(board);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long boardId) {
+        Board board = em.find(Board.class, boardId);
+        em.remove(board);
     }
 }
