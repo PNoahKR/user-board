@@ -23,13 +23,14 @@ public class JpaMemoryBoardRepository implements BoardRepository {
     @Override
     public Optional<Board> findBoardById(Long boardId) {
         Board board = em.find(Board.class, boardId);
-        return Optional.ofNullable(board);
+        return Optional.ofNullable(board)
+                .filter(Board::isStatus);
     }
 
     @Override
     @Transactional
     public void delete(Long boardId) {
         Board board = em.find(Board.class, boardId);
-        em.remove(board);
+        board.changeStatus(false);
     }
 }
