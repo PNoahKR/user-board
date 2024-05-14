@@ -6,22 +6,22 @@ import demo.userboard.dto.request.JoinRequestDto;
 import demo.userboard.dto.request.LoginRequestDto;
 import demo.userboard.dto.response.JoinResponseDto;
 import demo.userboard.dto.response.UserResponseDto;
+import demo.userboard.global.common.crypto.PasswordCrypto;
 import demo.userboard.global.common.response.CustomErrorCode;
 import demo.userboard.global.core.exception.CustomException;
 import demo.userboard.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Transactional(readOnly = true)
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final PasswordCrypto passwordCrypto;
 
 
     @Override
@@ -36,8 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long login(LoginRequestDto requestDto) {
+        String encodePassword = passwordCrypto.encodePassword(requestDto.getPassword());
         return userRepository.findByEmail(requestDto.getEmail())
-                .filter(user -> user.getPassword().equals(requestDto.getPassword()))
+                .filter(user -> passwordCrypto.matches(requestDto.getPassword(), encodePassword))
                 .map(User::getId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.LOGIN_FAIL));
     }
