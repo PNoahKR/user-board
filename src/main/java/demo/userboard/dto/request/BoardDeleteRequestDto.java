@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardDeleteRequestDto {
-    private String password;
     private Long boardId;
     private Long userId;
 }

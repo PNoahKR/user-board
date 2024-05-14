@@ -43,7 +43,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long boardUpdate(BoardUpdateRequestDto updateRequestDto) {
-        Board board = validateUserAndAuth(updateRequestDto.getBoardId(), updateRequestDto.getUserId());
+        Board board = findUserBoard(updateRequestDto.getBoardId(), updateRequestDto.getUserId());
 
         String newTitle = updateRequestDto.getTitle();
         String newContent = updateRequestDto.getContent();
@@ -68,18 +68,14 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long boardDelete(BoardDeleteRequestDto deleteRequestDto) {
-        Board board = validateUserAndAuth(deleteRequestDto.getBoardId(), deleteRequestDto.getUserId());
-
-        userRepository.findById(deleteRequestDto.getUserId())
-                .filter(u -> u.getPassword().equals(deleteRequestDto.getPassword()))
-                .orElseThrow(() -> new CustomException(CustomErrorCode.UNAUTHORIZED));
+        Board board = findUserBoard(deleteRequestDto.getBoardId(), deleteRequestDto.getUserId());
 
         boardRepository.delete(board.getId());
 
         return deleteRequestDto.getBoardId();
     }
 
-    private Board validateUserAndAuth(Long boardId, Long userId) {
+    private Board findUserBoard(Long boardId, Long userId) {
         return boardRepository.findBoardById(boardId)
                 .filter(b -> b.getUser().getId().equals(userId))
                 .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_BOARD_INFO));
