@@ -1,5 +1,6 @@
 package demo.userboard.controller;
 
+import demo.userboard.dto.request.BoardDeleteRequestDto;
 import demo.userboard.dto.request.BoardUpdateRequestDto;
 import demo.userboard.dto.request.PostRequestDto;
 import demo.userboard.dto.response.BoardDetailViewResponseDto;
@@ -36,5 +37,14 @@ public class BoardController {
         updateRequestDto.setBoardId(boardId);
         updateRequestDto.setUserId(sessionLoginInfo.getId());
         return ApiResponseUtil.success(boardService.boardUpdate(updateRequestDto));
+    }
+
+    @DeleteMapping("/board/{boardId}")
+    public CommonResponse<Long> deleteBoard(@PathVariable("boardId") Long boardId,
+                                            @RequestBody BoardDeleteRequestDto deleteRequestDto,
+                                            @SessionAuth SessionLoginInfo sessionLoginInfo) {
+        deleteRequestDto.setBoardId(boardId);
+        deleteRequestDto.setUserId(sessionLoginInfo.getId());
+        return ApiResponseUtil.success(boardService.boardDelete(deleteRequestDto));
     }
 }

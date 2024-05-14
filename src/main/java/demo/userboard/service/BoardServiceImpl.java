@@ -2,6 +2,7 @@ package demo.userboard.service;
 
 import demo.userboard.domain.Board;
 import demo.userboard.domain.User;
+import demo.userboard.dto.request.BoardDeleteRequestDto;
 import demo.userboard.dto.request.BoardUpdateRequestDto;
 import demo.userboard.dto.request.PostRequestDto;
 import demo.userboard.dto.response.BoardDetailViewResponseDto;
@@ -42,9 +43,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long boardUpdate(BoardUpdateRequestDto updateRequestDto) {
-        Board board = boardRepository.findBoardById(updateRequestDto.getBoardId())
-                .filter(b -> b.getUser().getId().equals(updateRequestDto.getUserId()))
-                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_BOARD_INFO));
+        Board board = findUserBoard(updateRequestDto.getBoardId(), updateRequestDto.getUserId());
 
         String newTitle = updateRequestDto.getTitle();
         String newContent = updateRequestDto.getContent();
@@ -64,5 +63,21 @@ public class BoardServiceImpl implements BoardService {
             board.updateContent(newContent);
         }
         return updateRequestDto.getBoardId();
+    }
+
+    @Override
+    @Transactional
+    public Long boardDelete(BoardDeleteRequestDto deleteRequestDto) {
+        Board board = findUserBoard(deleteRequestDto.getBoardId(), deleteRequestDto.getUserId());
+
+        boardRepository.delete(board.getId());
+
+        return deleteRequestDto.getBoardId();
+    }
+
+    private Board findUserBoard(Long boardId, Long userId) {
+        return boardRepository.findBoardById(boardId)
+                .filter(b -> b.getUser().getId().equals(userId))
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_BOARD_INFO));
     }
 }

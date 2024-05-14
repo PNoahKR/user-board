@@ -9,4 +9,6 @@ public interface BoardRepository {
     Board save(Board board);
 
     Optional<Board> findBoardById(Long boardId);
+
+    void delete(Long boardId);
 }

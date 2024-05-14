@@ -47,4 +47,8 @@ public class Board extends BaseEntity {
     public void updateContent(String newContent) {
         this.content = newContent;
     }
+
+    public void changeStatus(boolean changeStatus) {
+        this.status = changeStatus;
+    }
 }
