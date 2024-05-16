@@ -14,14 +14,12 @@ public class PasswordConverter implements AttributeConverter<String, String> {
 
     @Override
     public String convertToDatabaseColumn(String attribute) {
-        if (attribute == null) {
-            return null;
-        }
+
         return passwordEncoder.encode(attribute);
     }
 
     @Override
     public String convertToEntityAttribute(String dbData) {
-        return null;
+        return dbData;
     }
 }
