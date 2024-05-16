@@ -79,8 +79,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<AllBoardListResponseDto> findAllBoard() {
-        List<Board> boardList = boardRepository.findAll();
+    public List<AllBoardListResponseDto> findAllBoard(int page, int size) {
+        List<Board> boardList = boardRepository.findAll(page, size);
         return boardList
                 .stream()
                 .map(AllBoardListResponseDto::from)

@@ -22,8 +22,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/boards")
-    public CommonResponse<List<AllBoardListResponseDto>> allBoardList() {
-        return ApiResponseUtil.success(boardService.findAllBoard());
+    public CommonResponse<List<AllBoardListResponseDto>> allBoardList(@RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(defaultValue = "10") int size) {
+        return ApiResponseUtil.success(boardService.findAllBoard(page, size));
     }
 
     @GetMapping("/board/{boardId}")

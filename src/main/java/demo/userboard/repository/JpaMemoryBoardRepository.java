@@ -36,10 +36,10 @@ public class JpaMemoryBoardRepository implements BoardRepository {
     }
 
     @Override
-    public List<Board> findAll() {
+    public List<Board> findAll(int page, int size) {
         List<Board> resultList = em.createQuery("select b from Board b where b.status = true order by b.id desc", Board.class)
-                .setFirstResult(0)
-                .setMaxResults(10)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size)
                 .getResultList();
         return resultList;
     }
