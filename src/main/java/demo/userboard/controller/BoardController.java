@@ -21,7 +21,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/board")
+    @GetMapping("/boards")
     public CommonResponse<List<AllBoardListResponseDto>> allBoardList() {
         return ApiResponseUtil.success(boardService.findAllBoard());
     }
