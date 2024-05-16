@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -85,7 +84,7 @@ public class BoardServiceImpl implements BoardService {
         return boardList
                 .stream()
                 .map(AllBoardListResponseDto::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private Board findUserBoard(Long boardId, Long userId) {
