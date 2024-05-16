@@ -17,7 +17,8 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests(
                         (authorizeHttpRequests) -> authorizeHttpRequests.anyRequest().permitAll()
-                );
+                )
+                .logout((logout) -> logout.disable());
         return http.build();
     }
 
