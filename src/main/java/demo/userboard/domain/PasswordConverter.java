@@ -2,14 +2,14 @@ package demo.userboard.domain;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Converter
+@RequiredArgsConstructor
 public class PasswordConverter implements AttributeConverter<String, String> {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public String convertToDatabaseColumn(String attribute) {
