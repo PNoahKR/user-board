@@ -28,7 +28,7 @@ public class User extends BaseEntity {
     @Column(name = "email", length = 30, unique = true, nullable = false)
     private String email; //회원 이메일(로그인 아이디 중복x)
 
-    @Column(name = "password", length = 20, nullable = false)
+    @Column(name = "password", length = 60, nullable = false)
     @Convert(converter = PasswordConverter.class)
     private String password; //회원 비밀번호
 
