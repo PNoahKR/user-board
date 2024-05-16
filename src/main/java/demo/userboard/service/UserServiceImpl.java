@@ -36,9 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long login(LoginRequestDto requestDto) {
-        String encodePassword = passwordCrypto.encodePassword(requestDto.getPassword());
+
         return userRepository.findByEmail(requestDto.getEmail())
-                .filter(user -> passwordCrypto.matches(requestDto.getPassword(), encodePassword))
+                .filter(user -> passwordCrypto.matches(requestDto.getPassword(), user.getPassword()))
                 .map(User::getId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.LOGIN_FAIL));
     }
