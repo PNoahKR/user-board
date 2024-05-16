@@ -3,6 +3,7 @@ package demo.userboard.controller;
 import demo.userboard.dto.request.BoardDeleteRequestDto;
 import demo.userboard.dto.request.BoardUpdateRequestDto;
 import demo.userboard.dto.request.PostRequestDto;
+import demo.userboard.dto.response.AllBoardListResponseDto;
 import demo.userboard.dto.response.BoardDetailViewResponseDto;
 import demo.userboard.global.annotation.SessionAuth;
 import demo.userboard.global.common.auth.SessionLoginInfo;
@@ -12,11 +13,18 @@ import demo.userboard.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
+
+    @GetMapping("/board")
+    public CommonResponse<List<AllBoardListResponseDto>> allBoardList() {
+        return ApiResponseUtil.success(boardService.findAllBoard());
+    }
 
     @GetMapping("/board/{boardId}")
     public CommonResponse<BoardDetailViewResponseDto> detailView(@PathVariable("boardId") Long boardId) {

@@ -5,6 +5,7 @@ import demo.userboard.domain.User;
 import demo.userboard.dto.request.BoardDeleteRequestDto;
 import demo.userboard.dto.request.BoardUpdateRequestDto;
 import demo.userboard.dto.request.PostRequestDto;
+import demo.userboard.dto.response.AllBoardListResponseDto;
 import demo.userboard.dto.response.BoardDetailViewResponseDto;
 import demo.userboard.global.common.response.CustomErrorCode;
 import demo.userboard.global.core.exception.CustomException;
@@ -14,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -73,6 +77,15 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.delete(board.getId());
 
         return deleteRequestDto.getBoardId();
+    }
+
+    @Override
+    public List<AllBoardListResponseDto> findAllBoard() {
+        List<Board> boardList = boardRepository.findAll();
+        return boardList
+                .stream()
+                .map(AllBoardListResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     private Board findUserBoard(Long boardId, Long userId) {
