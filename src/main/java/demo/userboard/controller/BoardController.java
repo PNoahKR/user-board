@@ -22,7 +22,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/boards")
-    public CommonResponse<List<AllBoardListResponseDto>> allBoardList(@RequestParam(defaultValue = "0") int page,
+    public CommonResponse<List<AllBoardListResponseDto>> allBoardList(@RequestParam(defaultValue = "1") int page,
                                                                       @RequestParam(defaultValue = "10") int size) {
         return ApiResponseUtil.success(boardService.findAllBoard(page, size));
     }
