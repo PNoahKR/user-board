@@ -17,5 +17,5 @@ public interface BoardService {
 
     Long boardDelete(BoardDeleteRequestDto deleteRequestDto);
 
-    PageInfoResponseDto<AllBoardListResponseDto> findAllBoard(int page, int size);
+    PageInfoResponseDto<AllBoardListResponseDto> boardListPaged(int page, int size);
 }

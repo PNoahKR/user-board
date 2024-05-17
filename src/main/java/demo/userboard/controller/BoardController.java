@@ -23,7 +23,7 @@ public class BoardController {
     @GetMapping("/boards")
     public CommonResponse<PageInfoResponseDto<AllBoardListResponseDto>> allBoardList(@RequestParam(defaultValue = "1") int page,
                                                                                      @RequestParam(defaultValue = "10") int size) {
-        return ApiResponseUtil.success(boardService.findAllBoard(page, size));
+        return ApiResponseUtil.success(boardService.boardListPaged(page, size));
     }
 
     @GetMapping("/board/{boardId}")
