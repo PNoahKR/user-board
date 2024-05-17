@@ -43,10 +43,4 @@ public class JpaMemoryBoardRepository implements BoardRepository {
                 .getResultList();
         return resultList;
     }
-
-    @Override
-    public Long countAllBoards() {
-        return em.createQuery("select count(b) from Board b where b.status = true", Long.class)
-                .getSingleResult();
-    }
 }
