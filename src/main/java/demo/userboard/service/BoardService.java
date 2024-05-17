@@ -5,8 +5,7 @@ import demo.userboard.dto.request.BoardUpdateRequestDto;
 import demo.userboard.dto.request.PostRequestDto;
 import demo.userboard.dto.response.AllBoardListResponseDto;
 import demo.userboard.dto.response.BoardDetailViewResponseDto;
-
-import java.util.List;
+import demo.userboard.dto.response.PageInfoResponseDto;
 
 public interface BoardService {
 
@@ -18,5 +17,5 @@ public interface BoardService {
 
     Long boardDelete(BoardDeleteRequestDto deleteRequestDto);
 
-    List<AllBoardListResponseDto> findAllBoard(int page, int size);
+    PageInfoResponseDto<AllBoardListResponseDto> findAllBoard(int page, int size);
 }

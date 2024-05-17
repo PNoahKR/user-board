@@ -7,6 +7,8 @@ import demo.userboard.dto.request.BoardUpdateRequestDto;
 import demo.userboard.dto.request.PostRequestDto;
 import demo.userboard.dto.response.AllBoardListResponseDto;
 import demo.userboard.dto.response.BoardDetailViewResponseDto;
+import demo.userboard.dto.response.PageInfoResponseDto;
+import demo.userboard.dto.response.PagingResponseDto;
 import demo.userboard.global.common.response.CustomErrorCode;
 import demo.userboard.global.core.exception.CustomException;
 import demo.userboard.repository.BoardRepository;
@@ -79,12 +81,18 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<AllBoardListResponseDto> findAllBoard(int page, int size) {
+    public PageInfoResponseDto<AllBoardListResponseDto> findAllBoard(int page, int size) {
         List<Board> boardList = boardRepository.findAll(page, size);
-        return boardList
+        List<AllBoardListResponseDto> list = boardList
                 .stream()
                 .map(AllBoardListResponseDto::from)
                 .toList();
+
+        Long totalBoard = boardRepository.countAllBoards();
+        int numberOfElements = list.size();
+        boolean hasNext = page * size < totalBoard;
+        PagingResponseDto pagingResponseDto = new PagingResponseDto(page, size, hasNext, numberOfElements);
+        return new PageInfoResponseDto<>(list, pagingResponseDto);
     }
 
     private Board findUserBoard(Long boardId, Long userId) {

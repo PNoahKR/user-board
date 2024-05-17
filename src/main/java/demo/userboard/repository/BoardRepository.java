@@ -14,4 +14,6 @@ public interface BoardRepository {
     void delete(Long boardId);
 
     List<Board> findAll(int page, int size);
+
+    Long countAllBoards();
 }

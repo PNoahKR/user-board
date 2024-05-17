@@ -5,6 +5,7 @@ import demo.userboard.dto.request.BoardUpdateRequestDto;
 import demo.userboard.dto.request.PostRequestDto;
 import demo.userboard.dto.response.AllBoardListResponseDto;
 import demo.userboard.dto.response.BoardDetailViewResponseDto;
+import demo.userboard.dto.response.PageInfoResponseDto;
 import demo.userboard.global.annotation.SessionAuth;
 import demo.userboard.global.common.auth.SessionLoginInfo;
 import demo.userboard.global.common.response.CommonResponse;
@@ -13,8 +14,6 @@ import demo.userboard.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
@@ -22,8 +21,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/boards")
-    public CommonResponse<List<AllBoardListResponseDto>> allBoardList(@RequestParam(defaultValue = "1") int page,
-                                                                      @RequestParam(defaultValue = "10") int size) {
+    public CommonResponse<PageInfoResponseDto<AllBoardListResponseDto>> allBoardList(@RequestParam(defaultValue = "1") int page,
+                                                                                     @RequestParam(defaultValue = "10") int size) {
         return ApiResponseUtil.success(boardService.findAllBoard(page, size));
     }
 
