@@ -3,7 +3,9 @@ package demo.userboard.controller;
 import demo.userboard.dto.request.BoardDeleteRequestDto;
 import demo.userboard.dto.request.BoardUpdateRequestDto;
 import demo.userboard.dto.request.PostRequestDto;
+import demo.userboard.dto.response.AllBoardListResponseDto;
 import demo.userboard.dto.response.BoardDetailViewResponseDto;
+import demo.userboard.dto.response.PageInfoResponseDto;
 import demo.userboard.global.annotation.SessionAuth;
 import demo.userboard.global.common.auth.SessionLoginInfo;
 import demo.userboard.global.common.response.CommonResponse;
@@ -17,6 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
 
     private final BoardService boardService;
+
+    @GetMapping("/boards")
+    public CommonResponse<PageInfoResponseDto<AllBoardListResponseDto>> allBoardList(@RequestParam(defaultValue = "1") int page,
+                                                                                     @RequestParam(defaultValue = "10") int size) {
+        return ApiResponseUtil.success(boardService.boardListPaged(page, size));
+    }
 
     @GetMapping("/board/{boardId}")
     public CommonResponse<BoardDetailViewResponseDto> detailView(@PathVariable("boardId") Long boardId) {

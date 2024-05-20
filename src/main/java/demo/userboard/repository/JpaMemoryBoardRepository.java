@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,5 +33,14 @@ public class JpaMemoryBoardRepository implements BoardRepository {
     public void delete(Long boardId) {
         Board board = em.find(Board.class, boardId);
         board.changeStatus(false);
+    }
+
+    @Override
+    public List<Board> getPagedBoard(int page, int size) {
+        List<Board> resultList = em.createQuery("select b from Board b where b.status = true order by b.id desc", Board.class)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size + 1)
+                .getResultList();
+        return resultList;
     }
 }
