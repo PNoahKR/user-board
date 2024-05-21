@@ -104,6 +104,8 @@
 ## 💻 구현
 
 1. ERD 설계
+<details>
+<summary><strong>ERD</strong></summary>
 <img width="445" alt="UserBoard_ERD" src="https://github.com/PNoahKR/user-board/assets/156992925/721aa737-4769-4370-a89d-5e7924d59b58">
 
 ```bash
@@ -135,6 +137,8 @@ CREATE TABLE `user` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
+
+</details>
 
 2. API 설계
 
