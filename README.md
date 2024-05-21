@@ -104,7 +104,7 @@
 ## 💻 구현
 
 1. ERD 설계
-
+<img width="445" alt="UserBoard_ERD" src="https://github.com/PNoahKR/user-board/assets/156992925/721aa737-4769-4370-a89d-5e7924d59b58">
 
 ```bash
 CREATE TABLE `board` (
