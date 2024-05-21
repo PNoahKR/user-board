@@ -8,7 +8,7 @@
 ## 📚 기술 스택
 
 - 언어 : JAVA
-- 프레임워크 : Spring boot
+- 프레임워크 : Spring boot, Spring data JPA, Spring Security, Spring Web, Spring Validation, Lombok
 - 데이터베이스 : Mysql
 
 ## 📖 주요기능
