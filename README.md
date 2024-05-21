@@ -104,6 +104,7 @@
 ## 💻 구현
 
 1. ERD 설계
+
 <details>
 <summary><strong>ERD</strong></summary>
 <img width="445" alt="UserBoard_ERD" src="https://github.com/PNoahKR/user-board/assets/156992925/721aa737-4769-4370-a89d-5e7924d59b58">
@@ -361,5 +362,380 @@ CREATE TABLE `user` (
     }
     ```
 - **Authentication**: 세션을 통해 인증된 사용자만 접근 가능
+
+</details>
+
+## 🧑‍💻 프로젝트 진행 중 고려한 사항들
+
+### 1. 패키지 구조
+<details>
+<summary>패키지 구조</summary>
+객체지향적인 패키지 구조로 계층형 패키지 형태로 설계해 구조를 간단하게 파악할 수 있도록 만들었습니다.
+
+---
+
+- **controller** : 웹 요청을 처리하는 컨트롤러
+- **dto** : 데이터 전송 객체
+    - **request** : 클라이언트 요청 데이터를 담는 객체
+    - **response** : 서버 응답 데이터를 담는 객체
+- **domain** : JPA 엔티티 클래스
+- **global** : 프로젝트 전역에 사용되는 구성 요소
+    - **annotation** : 커스텀 어노테이션
+    - **common** : 공통 응답처리 및 유티리티
+    - **core** : config, 예외 처리 등 핵심 요소
+- **repository** : 데이터베이스 접근을 담당하는 리포지토리
+- **service** : 비즈니스 로직을 담당하는 서비스 클래스
+</details>
+
+### 2. 공통 응답 및 예외 처리
+
+<details>
+<summary>공통 응답</summary>
+
+#### 공통 응답
+
+모든 API의 응답은 'CommonResponse' 객체를 통해 반환하도록 설계했으며, 성공과 실패에 따라 API 응답이 일관될 수 있도록 'ApiResponseUtil'을 통해 메서드를 제공합니다.
+
+**CommonResponse**
+
+```java
+
+@Getter
+public class CommonResponse<T> {
+
+    private final Integer status;
+    private final String message;
+    private final T data;
+
+    public CommonResponse(Integer status, String message, T data) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+    }
+
+    public CommonResponse(Integer status, String message) {
+        this.status = status;
+        this.message = message;
+        this.data = null;
+    }
+}
+```
+
+- status: HTTP 상태 코드
+- message: 응답 메세지 (성공시 'success' 반환, 실패시 오류 메세지 반환)
+- data: 응답 데이터 (없을시 null)
+
+---
+
+**ApiResponseUtil**
+
+```java
+public class ApiResponseUtil {
+
+    public static <T> CommonResponse<T> success() {
+        return new CommonResponse<>(SUCCESS.getStatus().value(), SUCCESS.getMessage(), null);
+    }
+
+    public static <T> CommonResponse<T> success(T response) {
+        return new CommonResponse<>(SUCCESS.getStatus().value(), SUCCESS.getMessage(), response);
+    }
+
+    public static <T> CommonResponse<T> failure(CustomErrorCode errorCode) {
+        return new CommonResponse<>(errorCode.getStatus().value(), errorCode.getMessage());
+    }
+
+    public static <T> CommonResponse<T> failure(Integer statusCode, String message) {
+        return new CommonResponse<>(statusCode, message);
+    }
+}
+```
+
+</details>
+<p></p>
+<details>
+<summary>예외 처리</summary>
+
+#### 예외 처리
+
+해당 어플리케이션에서 발생한는 예외는 'GlobalExceptionHandler' 클래스를 통해 응답을 반환하고, 로그를 남기며 특정 예외를 커스텀 처리할 수 있도록 합니다.
+
+**GlobalExceptionHandler**
+
+```java
+
+@Slf4j
+@RestControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    // 추가해야 하는 Exception 추가 정의
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<CommonResponse<Object>> handleException(Exception exception) {
+        log.error("Exception", exception);
+
+        return toErrorResponseEntity(SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CustomException.class)
+    protected ResponseEntity<CommonResponse<Object>> handleBadRequestException(CustomException exception) {
+        log.warn("CustomException", exception);
+
+        return toErrorResponseEntity(exception.getErrorCode());
+    }
+
+    protected ResponseEntity<CommonResponse<Object>> toErrorResponseEntity(CustomErrorCode errorCode) {
+
+        return ResponseEntity
+                .status(errorCode.getStatus().value())
+                .body(ApiResponseUtil.failure(errorCode));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception exception, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+        log.error("Exception", exception);
+        CommonResponse<Object> response = ApiResponseUtil.failure(statusCode.value(), exception.getMessage());
+        return ResponseEntity.status(statusCode).body(response);
+    }
+}
+```
+
+---
+'CustomException'은 'RuntimeException'을 상속받아 커스텀 예외를 정의하고, 'CustomErrorCode'를 포함해 예외 발생시 특정 코드에 대한 정보를 제공합니다.
+
+**CustomException**
+
+```java
+
+@Getter
+public class CustomException extends RuntimeException {
+    private final CustomErrorCode errorCode;
+
+    public CustomException(CustomErrorCode errorCode) {
+        this.errorCode = errorCode;
+    }
+}
+```
+
+---
+'CustomErrorCode'를 통해 특정 에러코드를 정의하고, 응답 코드는 HTTP 상태 코드와 메세지를 정의합니다.
+
+**CustomErrorCode**
+
+```java
+
+@Getter
+public enum CustomErrorCode {
+    // 공통 응답 코드
+    SUCCESS(OK, "success"),
+    SERVER_ERROR(INTERNAL_SERVER_ERROR, "server error"),
+    // 사용자 정의 코드
+    LOGIN_FAIL(HttpStatus.BAD_REQUEST, "로그인 실패"),
+    NOT_FOUND_LOGIN_INFO(HttpStatus.NOT_FOUND, "계정 정보를 찾을 수 없습니다."),
+    NOT_FOUND_BOARD_INFO(HttpStatus.NOT_FOUND, "게시물 정보를 찾을 수 없습니다."),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증 실패"),
+    DUPLICATE_VALUE(HttpStatus.CONFLICT, "중복 오류"),
+    INVALID_FORMAT(HttpStatus.BAD_REQUEST, "유효하지 않은 입력입니다.");
+
+    private final HttpStatus status;
+    private final String message;
+
+    CustomErrorCode(HttpStatus status, String message) {
+        this.status = status;
+        this.message = message;
+    }
+}
+```
+
+</details>
+
+### 3. 로그인 인증 방식
+
+<details>
+<summary>세션 인증 방식</summary>
+로그인 인증방식은 이번 프로젝트에서 세션 기반 인증 방식을 사용하기로 했다.
+
+세션 방식을 사용하면서 세션 로그인 체크 로직에 대한 부분이 중복적으로 들어가게 됐고 이를 공통화하는 방안으로 ArgumentResolver를 사용해 구현하게됐다.
+
+**SessionAuth**
+
+```java
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
+public @interface SessionAuth {
+}
+```
+
+로그인 체크를 위한 커스텀 어노테이션
+
+---
+**SessionLoginInfo**
+
+```java
+
+@Getter
+@AllArgsConstructor
+public class SessionLoginInfo {
+
+    private Long id;
+    private String nickname;
+    private String email;
+
+    public static SessionLoginInfo from(User user) {
+        return new SessionLoginInfo(
+                user.getId(),
+                user.getNickname(),
+                user.getEmail()
+        );
+    }
+}
+```
+
+로그인 정보가 필요한 API에 전달하기 위한 로그인 정보 DTO 객체
+
+---
+**SessionLoginArgumentResolver**
+
+```java
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class SessionLoginArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private final HttpSession httpSession;
+    private final UserRepository userRepository;
+
+    @Override
+    public boolean supportsParameter(MethodParameter parameter) {
+        boolean hasAnnotation = parameter.hasParameterAnnotation(SessionAuth.class);
+        boolean isLongInfo = SessionLoginInfo.class.isAssignableFrom(parameter.getParameterType());
+
+        return hasAnnotation && isLongInfo;
+
+    }
+
+    @Override
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        if (ObjectUtils.isEmpty(httpSession.getAttribute(LOGIN_USER))) {
+            throw new CustomException(CustomErrorCode.UNAUTHORIZED);
+        }
+
+        Long userId = (Long) httpSession.getAttribute(LOGIN_USER);
+
+        return userRepository.findById(userId)
+                .map(SessionLoginInfo::from)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.NOT_FOUND_LOGIN_INFO));
+    }
+}
+```
+
+API에 파라미터가 SessionAuth 어노테이션을 가지고 있고, SessionLoginInfo를 가지고 있으면 해당 리졸버가 동작합니다
+
+---
+**WebConfig**
+
+```java
+
+@Configuration
+@RequiredArgsConstructor
+public class WebConfig implements WebMvcConfigurer {
+
+    private final SessionLoginArgumentResolver sessionLoginArgumentResolver;
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(sessionLoginArgumentResolver);
+        WebMvcConfigurer.super.addArgumentResolvers(resolvers);
+    }
+}
+```
+
+Spring에서 제공해주고 있는 HandlerMethodArgumentResolver에 SessionLoginArgumentResolver를 추가하기 위한 로직입니다.
+
+</details>
+
+### 4. 패스워드 암호화
+
+<details>
+<summary>패스워드 암호화</summary>
+
+**PasswordConverter**
+
+```java
+
+@Converter
+@RequiredArgsConstructor
+public class PasswordConverter implements AttributeConverter<String, String> {
+
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public String convertToDatabaseColumn(String attribute) {
+
+        return passwordEncoder.encode(attribute);
+    }
+
+    @Override
+    public String convertToEntityAttribute(String dbData) {
+        return dbData;
+    }
+}
+```
+
+AttributeConverter를 상속받아 엔티티에 패스워드 속성을 데이터베이스에 저장할 때 암호화를 합니다.
+패스워드를 데이터베이스에 암호화된 형태로 저장고, 데이터베이스에서 불러올 땐 그대로 불러오는 단반향 암호화로 구현했습니다.
+
+---
+**PasswordCrypto**
+
+```java
+
+@RequiredArgsConstructor
+@Component
+public class PasswordCrypto {
+
+    private final PasswordEncoder passwordEncoder;
+
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    public boolean matches(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+}
+```
+
+'encodePassword' 메서드로 패스워드를 암호화하고,
+'matches' 메서드로 원본 패스워드와 암호화된 패스워드의 일치 여부를 확인합니다.
+
+---
+**SecurityConfig**
+
+```java
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf((csrf) -> csrf.disable())
+                .authorizeHttpRequests(
+                        (authorizeHttpRequests) -> authorizeHttpRequests.anyRequest().permitAll()
+                )
+                .logout((logout) -> logout.disable());
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+```
+
+PasswordEncoder의 BCryptPasswordEncoder을 빈으로 등록해 사용할 수 있도록 했으며,
+HTTP 보안 설정에서 CSRF 보호를 비활성화하고, 모든 요청을 허용하며, 로그아웃 기능을 비활성화했습니다.
 
 </details>
